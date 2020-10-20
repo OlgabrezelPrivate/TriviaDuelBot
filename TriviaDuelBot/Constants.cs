@@ -11,14 +11,14 @@ namespace TriviaDuelBot
         /// The place where the bot's folder for saving data will be created. 
         /// Defaults to AppData/Local
         /// </summary>
-        public static readonly string BasePath =
+        public static readonly string AppDataFolder =
             Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
 
         /// <summary>
         /// The name of the folder that contains the database. 
-        /// This folder will be created inside the <see cref="BasePath"/>
+        /// This folder will be created inside the <see cref="AppDataFolder"/>
         /// </summary>
-        public const string AppFolder = @"TriviaDuelBot\";
+        public const string AppFolder = "TriviaDuelBot";
 
         /// <summary>
         /// The name of the database file, which is located in the <see cref="AppFolder"/>

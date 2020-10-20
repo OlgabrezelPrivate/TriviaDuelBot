@@ -33,19 +33,19 @@ namespace TriviaDuelBot
             Console.Title = "Trivia Duel Bot - Starting up...";
             Console.WriteLine("Trivia Duel Bot - Starting up...");
 
-            if (string.IsNullOrEmpty(Constants.BasePath))
+            if (string.IsNullOrEmpty(Constants.AppDataFolder))
             {
                 PrintError("The base path is empty! Cannot find the folder to store the files!");
                 return 1;
             }
-            if (!Directory.Exists(Constants.BasePath))
+            if (!Directory.Exists(Constants.AppDataFolder))
             {
                 PrintError("The base path doesn't exist! Cannot find the folder to store the files!", false);
-                PrintError("Base path: " + Constants.BasePath);
+                PrintError("Base path: " + Constants.AppDataFolder);
                 return 1;
             }
 
-            var appFolder = Path.Combine(Constants.BasePath, Constants.AppFolder);
+            var appFolder = Path.Combine(Constants.AppDataFolder, Constants.AppFolder);
             if (!Directory.Exists(appFolder))
             {
                 PrintInfo("App folder does not exist yet. It is being created.");
@@ -81,7 +81,7 @@ namespace TriviaDuelBot
                 Console.WriteLine();
 
                 PrintInfo("Finally, enter your bot token by @BotFather on telegram.");
-                Constants.BotToken = AskInput("Bot Token");
+                Constants.BotToken = AskInput("Bot Token").Trim('"');
                 Console.WriteLine();
 
                 PrintInfo("Setup complete!");
@@ -90,15 +90,25 @@ namespace TriviaDuelBot
             PrintInfo("Database startup successful!");
 
             PrintInfo("Starting bot...");
-            try
+            while (true)
             {
-                Bot.Init().Wait();
-            }
-            catch (Exception e)
-            {
-                PrintError("Could not initialize the bot! Error message below:", false);
-                PrintError(e.GetType().Name + ": " + e.Message);
-                return 1;
+                try
+                {
+                    Bot.Init().Wait();
+                    break;
+                }
+                catch (Exception e)
+                {
+                    PrintError("Could not initialize the bot! Error message below:", false);
+                    PrintError(e.GetType().Name + ": " + e.Message, false);
+                    Console.WriteLine();
+                    PrintInfo($"Your current bot token is \"{Constants.BotToken}\".");
+                    PrintInfo($"Enter \"exit\" to leave the program, or enter a different bot token to save.");
+                    var i = AskInput("New Bot Token").Trim('"');
+                    if (i.ToLower() == "exit") return 1;
+                    Constants.BotToken = i;
+                    Database.WriteSettings();
+                }
             }
 
             PrintInfo("Startup complete!");

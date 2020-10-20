@@ -22,7 +22,7 @@ namespace TriviaDuelBot
         /// </summary>
         public static void Init()
         {
-            DB = new SQLiteConnection(Path.Combine(Constants.BasePath, Constants.AppFolder, Constants.DatabaseName));
+            DB = new SQLiteConnection(Path.Combine(Constants.AppDataFolder, Constants.AppFolder, Constants.DatabaseName));
             DB.CreateTable<Player>();
             DB.CreateTable<Settings>();
             DB.CreateTable<Game>();
