@@ -181,9 +181,9 @@ namespace TriviaDuelBot
             return DB.Table<RunningGame>().FirstOrDefault(x => x.Id == Id);
         }
 
-        public static List<RunningGame> RunningGames_GetByPlayer(int PlayerId)
+        public static int RunningGames_GetCountByPlayer(int PlayerId)
         {
-            return DB.Table<RunningGame>().Where(x => x.Player1Id == PlayerId || x.Player2Id == PlayerId).ToList();
+            return DB.Table<RunningGame>().Count(x => x.Player1Id == PlayerId || x.Player2Id == PlayerId);
         }
 
         public static RunningGame RunningGame_GetByBothPlayers(int PlayerId1, int PlayerId2)

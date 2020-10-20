@@ -561,6 +561,13 @@ namespace TriviaDuelBot.TriviaDuel
                         var (p, opQuizzerName) = PlayerQueue.First();
                         PlayerQueue.Remove((p, opQuizzerName));
 
+                        var cnt = Database.RunningGames_GetCountByPlayer(p.Id);
+                        if (cnt >= 10)
+                        {
+                            await Bot.SendMessage("You can't have over 10 duels running at a time! Finish other duels first before starting new ones!", p.TelegramId);
+                            continue;
+                        }
+
                         var opponent = Database.Player_GetByQuizzerName(opQuizzerName);
                         if (opponent == null)
                         {
@@ -568,9 +575,18 @@ namespace TriviaDuelBot.TriviaDuel
                                 $"Perhaps they changed it? Sorry, can't start a game.", p.TelegramId);
                             continue;
                         }
-                        else if (opponent.Id == p.Id)
+                        
+                        if (opponent.Id == p.Id)
                         {
                             await Bot.SendMessage("You cannot play a duel against yourself!", p.TelegramId);
+                            continue;
+                        }
+
+                        cnt = Database.RunningGames_GetCountByPlayer(opponent.Id);
+                        if (cnt >= 10)
+                        {
+                            await Bot.SendMessage($"You can't challenge <b>{opQuizzerName}</b> to a duel, as " +
+                                $"they already have 10 duels running! Try again later ;)", p.TelegramId);
                             continue;
                         }
 
