@@ -134,6 +134,8 @@ namespace TriviaDuelBot
         {
             try
             {
+                if (msg.From.Id != Constants.BotOwner) return;
+
                 Program.Maintenance = !Program.Maintenance;
                 if (Program.Maintenance)
                 {
