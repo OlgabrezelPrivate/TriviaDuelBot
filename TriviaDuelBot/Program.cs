@@ -15,6 +15,12 @@ namespace TriviaDuelBot
         public static Dictionary<string, TriviaDuel.TriviaDuel> PlayingDuels =
             new Dictionary<string, TriviaDuel.TriviaDuel>();
 
+        /// <summary>
+        /// Maintenance mode. If this is true, nobody can take any game actions, ensuring the bot
+        /// is safe to be taken down.
+        /// </summary>
+        public static bool Maintenance = false;
+
         static int Main()
         {
             var s = StartupRoutine();

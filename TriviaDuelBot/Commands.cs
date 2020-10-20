@@ -93,6 +93,12 @@ namespace TriviaDuelBot
         {
             try
             {
+                if (Program.Maintenance)
+                {
+                    await Bot.SendMessage("You can't play now, the bot is in maintenance mode! Please try again later.", msg.Chat.Id);
+                    return;
+                }
+
                 if (p.QuizzerName == null)
                 {
                     await Bot.SendMessage("You need to set yourself a Quizzer Name before you can " +
@@ -124,10 +130,44 @@ namespace TriviaDuelBot
             }
         }
 
+        public static async Task Maintenance(Message msg)
+        {
+            try
+            {
+                Program.Maintenance = !Program.Maintenance;
+                if (Program.Maintenance)
+                {
+                    var waitTime = Constants.AnswerTime * 4 + 20;
+                    await Bot.SendMessage($"Maintenance mode is enabled. You should wait at least <b>{waitTime}</b> " +
+                        $"seconds before taking down the bot, so all ongoing game turns can be finished.\n\n" +
+                        $"I will notify you when that time has passed if maintenance is still on :)", msg.Chat.Id);
+
+                    await Task.Delay(1000 * waitTime);
+
+                    if (Program.Maintenance) // Dont notify if maintenance has been disabled since
+                        await Bot.SendMessage($"<b>{waitTime}</b> seconds have passed, you can take the bot down now :)", msg.Chat.Id);
+                }
+                else
+                {
+                    await Bot.SendMessage($"Maintenance mode is disabled again!", msg.Chat.Id);
+                }
+            }
+            catch (Exception e)
+            {
+                await Bot.LogError(e);
+            }
+        }
+
         public static async Task PlayCallback(CallbackQuery call, string[] args, Player p)
         {
             try
             {
+                if (Program.Maintenance)
+                {
+                    await Bot.AnswerCallback(call.Id, "You can't play now, the bot is in maintenance mode! Please try again later.", true);
+                    return;
+                }
+
                 switch (args[1])
                 {
                     case "stranger":
@@ -173,6 +213,12 @@ namespace TriviaDuelBot
         {
             try
             {
+                if (Program.Maintenance)
+                {
+                    await Bot.AnswerCallback(call.Id, "You can't play now, the bot is in maintenance mode! Please try again later.", true);
+                    return;
+                }
+
                 var g = Database.RunningGame_Get(int.Parse(args[1]));
                 if (g == null)
                 {

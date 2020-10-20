@@ -81,16 +81,9 @@ namespace TriviaDuelBot
                         await Commands.Play(msg, args, p);
                         break;
 
-                    case "/fonsw":
-                        await Bot.SendMessage("Drück mich erst wenn Ludwig sagt ._.", 250985086, new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("I bims 1 Knopf", "play|player|Olgabrezel")));
-                        await Bot.SendMessage("Drück mich erst wenn Ludwig sagt ._.", 295152997, new InlineKeyboardMarkup(InlineKeyboardButton.WithCallbackData("I bims 1 Knopf", "play|player|Fabian")));
-                        break;
-
-                    case "/debugstuff":
-                        var ludwig = Database.Player_GetByTelegramId(295152997);
-                        var fabi = Database.Player_GetByTelegramId(250985086);
-                        TriviaDuel.TriviaDuel.PlayerQueue.Add((ludwig, "Fabian"));
-                        TriviaDuel.TriviaDuel.PlayerQueue.Add((fabi, "Olgabrezel"));
+                    case "/maint":
+                    case "/maintenance":
+                        await Commands.Maintenance(msg);
                         break;
 
                     default:
