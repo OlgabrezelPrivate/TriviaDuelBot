@@ -568,6 +568,11 @@ namespace TriviaDuelBot.TriviaDuel
                                 $"Perhaps they changed it? Sorry, can't start a game.", p.TelegramId);
                             continue;
                         }
+                        else if (opponent.Id == p.Id)
+                        {
+                            await Bot.SendMessage("You cannot play a duel against yourself!", p.TelegramId);
+                            continue;
+                        }
 
                         var existing = Database.RunningGame_GetByBothPlayers(p.Id, opponent.Id);
                         if (existing != null)

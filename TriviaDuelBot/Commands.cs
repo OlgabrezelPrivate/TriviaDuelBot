@@ -101,6 +101,12 @@ namespace TriviaDuelBot
                     return;
                 }
 
+                if (args == p.QuizzerName)
+                {
+                    await Bot.SendMessage("You cannot play a duel against yourself!", msg.Chat.Id);
+                    return;
+                }
+
                 if (args != null)
                 {
                     TriviaDuel.TriviaDuel.PlayerQueue.Add((p, args));
