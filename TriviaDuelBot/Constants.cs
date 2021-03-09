@@ -81,7 +81,7 @@ namespace TriviaDuelBot
         /// <summary>
         /// The user who owns the bot
         /// </summary>
-        public static int BotOwner;
+        public static long BotOwner;
 
         /// <summary>
         /// The place where the bot sends all error messages. 

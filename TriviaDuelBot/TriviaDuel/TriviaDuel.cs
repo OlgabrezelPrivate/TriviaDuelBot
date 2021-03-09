@@ -17,7 +17,7 @@ namespace TriviaDuelBot.TriviaDuel
         public RunningGame DBGame;
 
         private int Choice = -1;
-        public int WaitingFor { get; private set; } = 0;
+        public long WaitingFor { get; private set; } = 0;
 
         public void Choose(int choice)
         {

@@ -11,7 +11,7 @@ namespace TriviaDuelBot.DBModel
         [PrimaryKey, AutoIncrement]
         public int Id { get; set; }
 
-        public int BotOwner { get; set; }
+        public long BotOwner { get; set; }
 
         public long LogChat { get; set; }
 

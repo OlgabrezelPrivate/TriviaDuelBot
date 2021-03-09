@@ -77,7 +77,7 @@ namespace TriviaDuelBot
 
                 PrintInfo("First things first: Please enter your Telegram ID.");
                 PrintInfo("You can obtain it from @userinfobot on Telegram, for example.");
-                Constants.BotOwner = AskInputInt("Your Telegram ID");
+                Constants.BotOwner = AskInputLong("Your Telegram ID");
                 Console.WriteLine();
 
                 PrintInfo("Next, enter the ID for your log chat. All errors by the bot will be sent there.");
@@ -159,19 +159,6 @@ namespace TriviaDuelBot
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine();
                 Console.WriteLine("[INPUT] You need to enter a valid string! Please try again!");
-                Console.ForegroundColor = fc;
-            }
-        }
-
-        static int AskInputInt(string question, bool canBeZero = false)
-        {
-            while (true)
-            {
-                if (int.TryParse(AskInput(question), out int result) && (canBeZero || result != 0)) return result;
-                var fc = Console.ForegroundColor;
-                Console.ForegroundColor = ConsoleColor.Cyan;
-                Console.WriteLine();
-                Console.WriteLine("[INPUT] You need to enter a valid integer! Please try again!");
                 Console.ForegroundColor = fc;
             }
         }

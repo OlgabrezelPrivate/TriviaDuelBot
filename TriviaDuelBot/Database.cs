@@ -72,7 +72,7 @@ namespace TriviaDuelBot
         #endregion
 
         #region Player
-        public static void Player_Save(int TelegramId, string Name, string Username)
+        public static void Player_Save(long TelegramId, string Name, string Username)
         {
             var p = DB.Table<Player>().FirstOrDefault(x => x.TelegramId == TelegramId);
             if (p == null)
@@ -115,7 +115,7 @@ namespace TriviaDuelBot
             return DB.Table<Player>().FirstOrDefault(x => x.Id == Id);
         }
 
-        public static Player Player_GetByTelegramId(int TelegramId)
+        public static Player Player_GetByTelegramId(long TelegramId)
         {
             return DB.Table<Player>().FirstOrDefault(x => x.TelegramId == TelegramId);
         }

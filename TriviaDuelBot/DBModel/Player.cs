@@ -12,7 +12,7 @@ namespace TriviaDuelBot.DBModel
         public int Id { get; set; }
 
         [Indexed]
-        public int TelegramId { get; set; }
+        public long TelegramId { get; set; }
 
         public string Name { get; set; }
 
