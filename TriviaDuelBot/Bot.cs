@@ -2,10 +2,12 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Telegram.Bot;
-using Telegram.Bot.Args;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Telegram.Bot.Polling;
+using System.Threading;
+using TriviaDuelBot.TriviaDuel;
 
 namespace TriviaDuelBot
 {
@@ -21,26 +23,27 @@ namespace TriviaDuelBot
             Api = new TelegramBotClient(Constants.BotToken);
             Me = await Api.GetMeAsync();
             await SendMessage("Started up!", Constants.BotOwner);
-            Api.OnUpdate += OnUpdate;
-            Api.StartReceiving();
+
+            Api.StartReceiving((sender, update, token) => { OnUpdate(sender, update, token); },
+                               (sender, exception, token) => { });
         }
         #endregion
 
         #region Receiving Updates        
-        private static void OnUpdate(object sender, UpdateEventArgs e)
+        private static void OnUpdate(object sender, Update u, CancellationToken token)
         {
-            switch (e.Update.Type)
+            switch (u.Type)
             {
                 case UpdateType.Message:
-                    Task.Run(async () => await HandleMessage(e.Update.Message));
+                    Task.Run(async () => await HandleMessage(u.Message), token);
                     break;
 
                 case UpdateType.CallbackQuery:
-                    Task.Run(async () => await HandleCallbackQuery(e.Update.CallbackQuery));
+                    Task.Run(async () => await HandleCallbackQuery(u.CallbackQuery), token);
                     break;
 
                 case UpdateType.PollAnswer:
-                    Task.Run(async () => await HandlePollAnswer(e.Update.PollAnswer));
+                    Task.Run(async () => await HandlePollAnswer(u.PollAnswer), token);
                     break;
             }
         }
@@ -150,7 +153,12 @@ namespace TriviaDuelBot
         {
             try
             {
-                return await Api.SendTextMessageAsync(chatId, text, pm, disableWebPagePreview, replyMarkup: keyboard);
+                return await Api.SendTextMessageAsync(
+                    chatId: chatId, 
+                    text: text, 
+                    parseMode: pm, 
+                    disableWebPagePreview: disableWebPagePreview, 
+                    replyMarkup: keyboard);
             }
             catch (Exception e)
             {
@@ -163,7 +171,13 @@ namespace TriviaDuelBot
         {
             try
             {
-                return await Api.EditMessageTextAsync(chatId, messageId, text, pm, disableWebPagePreview, keyboard);
+                return await Api.EditMessageTextAsync(
+                    chatId: chatId, 
+                    messageId: messageId, 
+                    text: text, 
+                    parseMode: pm, 
+                    disableWebPagePreview: disableWebPagePreview, 
+                    replyMarkup: keyboard);
             }
             catch (Exception e)
             {
@@ -176,7 +190,13 @@ namespace TriviaDuelBot
         {
             try
             {
-                return await Api.SendPollAsync(chatId, question, options, isAnonymous: false, openPeriod: Constants.AnswerTime);
+                return await Api.SendPollAsync(
+                    chatId: chatId, 
+                    question: question, 
+                    options: options,
+                    type: PollType.Regular,
+                    isAnonymous: false, 
+                    openPeriod: Constants.AnswerTime);
             }
             catch (Exception e)
             {
@@ -189,7 +209,14 @@ namespace TriviaDuelBot
         {
             try
             {
-                return await Api.SendPollAsync(chatId, question, options, type: PollType.Quiz, correctOptionId: correctAnswerId, isAnonymous: false, openPeriod: Constants.AnswerTime);
+                return await Api.SendPollAsync(
+                    chatId: chatId, 
+                    question: question, 
+                    options: options, 
+                    type: PollType.Quiz, 
+                    correctOptionId: correctAnswerId, 
+                    isAnonymous: false, 
+                    openPeriod: Constants.AnswerTime);
             }
             catch (Exception e)
             {
@@ -202,7 +229,10 @@ namespace TriviaDuelBot
         {
             try
             {
-                return await Api.StopPollAsync(chatId, messageId, keyboard);
+                return await Api.StopPollAsync(
+                    chatId: chatId, 
+                    messageId: messageId, 
+                    replyMarkup: keyboard);
             }
             catch (Exception e)
             {
@@ -215,7 +245,10 @@ namespace TriviaDuelBot
         {
             try
             {
-                await Api.EditMessageReplyMarkupAsync(chatId, messageId, newMarkup);
+                await Api.EditMessageReplyMarkupAsync(
+                    chatId: chatId,
+                    messageId: messageId,
+                    replyMarkup: newMarkup);
             }
             catch (Exception e)
             {
@@ -227,7 +260,10 @@ namespace TriviaDuelBot
         {
             try
             {
-                await Api.AnswerCallbackQueryAsync(callbackId, text, alert);
+                await Api.AnswerCallbackQueryAsync(
+                    callbackQueryId: callbackId, 
+                    text: text, 
+                    showAlert: alert);
             }
             catch (Exception e)
             {
@@ -251,7 +287,7 @@ namespace TriviaDuelBot
             }
             while (true);
 
-            await SendMessage(message + "\n\n" + trace, Constants.LogChat, pm: ParseMode.Default);
+            await SendMessage((message + "\n\n" + trace).FormatHTML(), Constants.LogChat);
         }
         #endregion
     }

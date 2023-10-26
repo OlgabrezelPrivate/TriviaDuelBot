@@ -13,9 +13,9 @@ Pull requests are appreciated! If you plan to do something larger, maybe come to
 to check if the pull request would be accepted. Thanks to every contributor!
 
 ## Installation
-Being written in C# .NET Core, the bot should run on any OS where you can install the Dotnet SDK.<br> 
+Being written in C# .NET 6, the bot should run on any OS where you can install the .NET 6 Runtime.<br> 
 It's been tested under Windows 10 and Ubuntu 20.04.<br>
-Before downloading and running the bot, you must have the Dotnet SDK installed!
+Before downloading and running the bot, you must have the .NET 6 Runtime installed!
 
 First of all, create your Bot account with [@BotFather](https://t.me/BotFather) on Telegram.<br>
 Bot Father will give you a token. Enter that token in the program (see further instructions) but **don't give the token to anybody else!**<br>
